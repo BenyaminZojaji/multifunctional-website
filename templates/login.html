@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %} Login {% endblock title %}
+
+{% block content %}
+    <h1>Login</h1>
+
+
+    <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Register</a>
+        </li>
+    </ul>
+
+    <form method="post">
+        <div class="mb-3">
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-control" name="email">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" name="password">
+        </div>
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input">
+          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock content %}
