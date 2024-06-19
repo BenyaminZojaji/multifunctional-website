@@ -1,11 +1,43 @@
 {% extends "layout.html" %}
 
-{% block title %} result {% endblock title %}
+{% block title %} BMR {% endblock title %}
 
 
 {% block content %}
-    <h1>result</h1>
-    <p>
-        Your age is {{ result }}.
-    </p>
+    <h1>BMR</h1>
+
+    <form method="post">
+        <div class="row">
+            <div class="col">
+                <label>Height: </label>
+                <input type="text" class="form-control" placeholder="height(cm)" name="height">
+            </div>
+            <div class="col">
+                <label>Weight: </label>
+                <input type="text" class="form-control" placeholder="weight(kg)" name="weight">
+            </div>
+            <div class="col">
+                <label>Age: </label>
+                <input type="text" class="form-control" placeholder="age(yrs)" name="age">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputState">Gender: </label>
+                <select id="inputState" class="form-control" name="gender">
+                <option selected>Choose...</option>
+                <option>male</option>
+                <option>female</option>
+                </select>
+            </div>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <br>
+    {% if result==None %}
+        <p>Enter your height and weight and press submit to continue.</p>
+    {% else %}
+        <p>Your BMR is: {{ result }}</p>
+    {% endif %}
+
 {% endblock content %}

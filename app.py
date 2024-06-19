@@ -65,6 +65,19 @@ def result():
     return render_template('result.html')
 
 
+@app.route("/BMR", methods=['GET', "POST"])
+def BMR():
+    if request.method == "GET":
+        return render_template('BMR.html', result=None)
+    
+    elif request.method == "POST":
+        height = request.form["height"]
+        weight = request.form["weight"]
+        age = request.form["age"]
+        gender = request.form["gender"]
+        result = ai_process.calculate_BMR(gender=gender, height=float(height), weight=float(weight), age=float(age))
+        
+        return render_template('BMR.html', result=result)
 
 
 if __name__ == '__main__':
