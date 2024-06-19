@@ -1,5 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session
+from sqlmodel import Field, SQLModel, create_engine, Session, select
+from pydantic import BaseModel
 import ai_process
 
 
@@ -8,11 +10,27 @@ app.config["UPLOAD_FOLDER"] = './uploads'
 app.config["ALLOWED_EXTENSION"] = {'png', 'jpg', 'jpeg'}
 
 
-def auth(email, password):
-    if email=="beni@beni.com" and password=='123':
-        return True
-    else:
-        return False
+class User(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True)
+    city: str = Field()
+    email: str = Field()
+    username: str = Field()
+    password: str = Field()
+    
+engine = create_engine('sqlite:///./database.db', echo=True)
+SQLModel.metadata.create_all(engine)
+
+
+class RegisterModel(BaseModel):
+    city: str
+    email: str
+    username: str
+    password: str
+    
+    
+class LoginModel(BaseModel):
+    username: str
+    password: str
 
 
 def allowed_file(filename):
@@ -31,13 +49,64 @@ def login():
         return render_template('login.html')
     
     elif request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        result = auth(email=email, password=password)
+        try:
+            login_model = LoginModel(
+                username = request.form["username"],
+                password = request.form["password"])
+            
+        except:
+            print('Type Error')
+            return redirect(url_for('login'))
+        
+        with Session(engine) as db_session:
+            statement = select(User).where(User.username == login_model.username).where(User.password == login_model.password)
+            result = db_session.exec(statement).first()
+        
+        
         if result:
+            print('welcome, you are logged in')
             return redirect(url_for('upload'))
         else:
+            print('username or password is incorrect')
             return redirect(url_for('login'))
+
+
+@app.route("/register", methods=['GET', "POST"])
+def register():
+    if request.method == "GET":
+        return render_template('register.html')
+    
+    elif request.method == "POST":
+        try:
+            register_data = RegisterModel(
+                city=request.form["city"], 
+                email=request.form["email"], 
+                username=request.form["username"], 
+                password=request.form["password"])
+        except:
+            print('Type Error')
+            return redirect(url_for('register'))
+            
+            
+        with Session(engine) as db_session:
+            statement = select(User).where(User.username == register_data.username)
+            result = db_session.exec(statement).first()
+            
+        if not result:
+            with Session(engine) as db_session:
+                user = User(
+                    city=register_data.city, 
+                    username=register_data.username,
+                    email=register_data.email,
+                    password=register_data.password
+                    )
+                db_session.add(user)
+                db_session.commit()
+                print('Your register done succesfully.')
+                return redirect(url_for('login'))
+        else:
+            print('username already exist, Try another username.')
+            return redirect(url_for('register'))
 
 
 @app.route("/upload", methods=['GET', "POST"])

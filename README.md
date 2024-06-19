@@ -1,4 +1,4 @@
-# Simple Personal Website
+# Multifunctional Website
 Simple Flask website with AI tools.
 
 THIS PROJECT WILL BE UPDATED.
