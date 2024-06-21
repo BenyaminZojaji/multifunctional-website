@@ -3,3 +3,4 @@ uploads/*.JPG
 uploads/*.JPEG
 uploads/*.PNG
 *.db
+*.ipynb
