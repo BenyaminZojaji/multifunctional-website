@@ -1,4 +1,5 @@
 import os
+import time
 from flask import Flask, render_template, request, redirect, url_for, session
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from pydantic import BaseModel
@@ -13,20 +14,31 @@ app.config["ALLOWED_EXTENSION"] = {'png', 'jpg', 'jpeg'}
 
 class User(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
-    city: str = Field()
+    first_name: str = Field()
+    last_name: str = Field()
     email: str = Field()
     username: str = Field()
+    age: int = Field()
+    city: str = Field()
+    country: str = Field()
     password: str = Field()
+    join_time: str = Field()
     
 engine = create_engine('sqlite:///./database.db', echo=True)
 SQLModel.metadata.create_all(engine)
 
 
 class RegisterModel(BaseModel):
-    city: str
+    first_name: str
+    last_name: str
     email: str
     username: str
+    age: int
+    city: str
+    country: str
     password: str
+    confirm_password: str
+    join_time: int
     
     
 class LoginModel(BaseModel):
@@ -84,12 +96,20 @@ def register():
     elif request.method == "POST":
         try:
             register_data = RegisterModel(
+                first_name=request.form["first_name"],
+                last_name=request.form["last_name"],
+                email=request.form["email"],
+                username=request.form["username"],
+                age=request.form["age"],
                 city=request.form["city"], 
-                email=request.form["email"], 
-                username=request.form["username"], 
-                password=request.form["password"])
-        except:
+                country=request.form["country"],
+                password=request.form["password"],
+                confirm_password=request.form["confirm_password"],
+                join_time=int(time.time())
+                )
+        except Exception as e:
             print('Type Error')
+            print (e)
             return redirect(url_for('register'))
             
             
@@ -98,19 +118,28 @@ def register():
             result = db_session.exec(statement).first()
             
         if not result:
-            enc_obj = Encryption()
-            hashed_password = enc_obj.hash_password(register_data.password)
-            with Session(engine) as db_session:
-                user = User(
-                    city=register_data.city, 
-                    username=register_data.username,
-                    email=register_data.email,
-                    password=hashed_password
-                    )
-                db_session.add(user)
-                db_session.commit()
-                print('Your register done succesfully.')
-                return redirect(url_for('login'))
+            if register_data.confirm_password == register_data.password:
+                enc_obj = Encryption()
+                hashed_password = enc_obj.hash_password(register_data.password)
+                with Session(engine) as db_session:
+                    user = User(
+                        first_name=register_data.first_name,
+                        last_name=register_data.last_name,
+                        email=register_data.email,
+                        username=register_data.username,
+                        age=register_data.age,
+                        city=register_data.city,
+                        country=register_data.country,
+                        password=hashed_password,
+                        join_time=register_data.join_time
+                        )
+                    db_session.add(user)
+                    db_session.commit()
+                    print('Your register done succesfully.')
+                    return redirect(url_for('login'))
+            else:
+                print('Passwords are not match.')
+                return redirect(url_for('register'))  
         else:
             print('username already exist, Try another username.')
             return redirect(url_for('register'))
