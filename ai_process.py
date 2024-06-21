@@ -1,15 +1,19 @@
 class Ai_analyze:
     def __init__(self):
-        pass
+        ...
     def analyze(self, image):
         try:
-            from deepface import DeepFace
-            result = DeepFace.analyze(
-            img_path = image, 
-            actions = ['age'])
-            return result[0]['age']
+            from ultralytics import YOLO
+
+            model_path = "model/yolov8n-cls.pt"
+            model = YOLO(model_path)
+            results = model(image)
+            for result in results:
+                id = result.probs.top1
+                name = result.names[id]
+            return name
         except:
-            return '??? (something is wrong! make sure your face is not covered)'
+            return ['??? - Something is wrong!']
             
             
 def calculate_BMR(gender, height, weight, age):
