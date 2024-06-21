@@ -1,78 +1,135 @@
-{% extends "layout.html" %}
-
-{% block title %} Register {% endblock title %}
-
-
-{% block content %}
+{% extends "layout.html" %} {% block title %} Register {% endblock title %} {%
+block content %}
 <h1>Register</h1>
 
 <div class="row justify-content-center">
-    <div class="col-4">
-        <div class="card text-bg-info mb-3">
-            <div class="card-header">Register</div>
-            <div class="card-body">
-                <form method="post">
-                    <div class="container text-center">
-                        <div class="row justify-content-center">
-                            <div class="col-6">
-                                <label for="exampleInputFirstname" class="form-label">First name</label>
-                                <input name="first_name" type="text" class="form-control" id="exampleInputFirstname">
-                            </div>
-                            <div class="col-6">
-                                <label for="exampleInputLasttname" class="form-label">Last name</label>
-                                <input name="last_name" type="text" class="form-control" id="exampleInputLastname">
-                            </div>
-                        </div>                         
-                    </div>
-                    
-                    <div class="container text-center">
-                        <div class="row justify-content-center">
-                            <div class="col-6">                          
-                                    <label for="exampleInputCountry" class="form-label">Country</label>
-                                    <input name="country" type="text" class="form-control" id="exampleInputCountry">
-                            </div>
-                            <div class="col-6">
-                                    <label for="exampleInputCity" class="form-label">City</label>
-                                    <input name="city" type="text" class="form-control" id="exampleInputCity">
-                            </div>
-                        </div>                         
-                    </div>
-
-                    <div class="container text-center">
-                        <div class="row justify-content-center">
-                        <div class="col-6"> 
-                            <label for="exampleInputAge" class="form-label">Age</label>
-                            <input name="age" type="number" class="form-control" id="exampleInputAge">
-                        </div>
-                    </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="exampleInputUsername" class="form-label">Username</label>
-                        <input name="username" type="text" class="form-control" id="exampleInputUsername">
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input name="email" type="email" class="form-control" id="exampleInputEmail1"
-                            aria-describedby="emailHelp">
-                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input name="password" type="password" class="form-control" id="exampleInputPassword1">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword2" class="form-label">Confirm password</label>
-                        <input name="confirm_password" type="password" class="form-control" id="exampleInputPassword2">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+  <div class="col-4">
+    <div class="card text-bg-info mb-3">
+      <div class="card-header">Register</div>
+      <div class="card-body">
+        <form method="post">
+          <div class="container text-center">
+            <div class="row justify-content-center">
+              <div class="col-6">
+                <label for="exampleInputFirstname" class="form-label"
+                  >First name</label
+                >
+                <input
+                  name="first_name"
+                  type="text"
+                  class="form-control"
+                  id="exampleInputFirstname"
+                />
+              </div>
+              <div class="col-6">
+                <label for="exampleInputLasttname" class="form-label"
+                  >Last name</label
+                >
+                <input
+                  name="last_name"
+                  type="text"
+                  class="form-control"
+                  id="exampleInputLastname"
+                />
+              </div>
             </div>
-        </div>
+          </div>
+
+          <div class="container text-center">
+            <div class="row justify-content-center">
+              <div class="col-6">
+                <label for="exampleInputCountry" class="form-label"
+                  >Country</label
+                >
+                <input
+                  name="country"
+                  type="text"
+                  class="form-control"
+                  id="exampleInputCountry"
+                />
+              </div>
+              <div class="col-6">
+                <label for="exampleInputCity" class="form-label">City</label>
+                <input
+                  name="city"
+                  type="text"
+                  class="form-control"
+                  id="exampleInputCity"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="container text-center">
+            <div class="row justify-content-center">
+              <div class="col-6">
+                <label for="exampleInputAge" class="form-label">Age</label>
+                <input
+                  name="age"
+                  type="number"
+                  class="form-control"
+                  id="exampleInputAge"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputUsername" class="form-label"
+              >Username</label
+            >
+            <input
+              name="username"
+              type="text"
+              class="form-control"
+              id="exampleInputUsername"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label"
+              >Email address</label
+            >
+            <input
+              name="email"
+              type="email"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+            />
+            <div id="emailHelp" class="form-text">
+              We'll never share your email with anyone else.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label"
+              >Password</label
+            >
+            <input
+              name="password"
+              type="password"
+              class="form-control"
+              id="exampleInputPassword1"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword2" class="form-label"
+              >Confirm password</label
+            >
+            <input
+              name="confirm_password"
+              type="password"
+              class="form-control"
+              id="exampleInputPassword2"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
 
 {% endblock content %}
