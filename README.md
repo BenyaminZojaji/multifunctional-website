@@ -1,7 +1,7 @@
 # Multifunctional Website
-Simple Flask website with AI tools.
+Flask website with AI tools.
 
-THIS PROJECT WILL BE UPDATED.
+**THIS PROJECT WILL BE UPDATED.**
 
 
 INSTALL:
@@ -9,7 +9,7 @@ INSTALL:
 pip install -r requirements.txt
 ```
 
-RUN:
+RUN: (Debug mode on)
 ```shell
 flask --app app run --debug
 ```

@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from pydantic import BaseModel
+from enc import Encryption
 import ai_process
 
 
@@ -59,15 +60,19 @@ def login():
             return redirect(url_for('login'))
         
         with Session(engine) as db_session:
-            statement = select(User).where(User.username == login_model.username).where(User.password == login_model.password)
+            statement = select(User).where(User.username == login_model.username)
             result = db_session.exec(statement).first()
         
-        
         if result:
-            print('welcome, you are logged in')
-            return redirect(url_for('upload'))
+            enc_obj = Encryption()
+            if enc_obj.check(login_model.password, result.password):
+                print('welcome, you are logged in')
+                return redirect(url_for('upload'))
+            else:
+                print('Password is incorrect')
+                return redirect(url_for('login'))
         else:
-            print('username or password is incorrect')
+            print('Username is incorrect')
             return redirect(url_for('login'))
 
 
@@ -93,12 +98,14 @@ def register():
             result = db_session.exec(statement).first()
             
         if not result:
+            enc_obj = Encryption()
+            hashed_password = enc_obj.hash_password(register_data.password)
             with Session(engine) as db_session:
                 user = User(
                     city=register_data.city, 
                     username=register_data.username,
                     email=register_data.email,
-                    password=register_data.password
+                    password=hashed_password
                     )
                 db_session.add(user)
                 db_session.commit()
