@@ -113,7 +113,7 @@ def register():
                 confirm_password=request.form["confirm_password"],
                 join_time=int(time.time())
                 )
-        except Exception as e:
+        except:
             flash('Type Error', 'danger')
             return redirect(url_for('register'))
             
@@ -148,6 +148,7 @@ def register():
         else:
             flash('username already exist, Try another username.', 'warning')
             return redirect(url_for('register'))
+
 
 @app.route("/logout")
 def logout():
