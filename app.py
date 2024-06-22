@@ -29,7 +29,9 @@ class User(SQLModel, table=True):
     password: str = Field()
     join_time: str = Field()
     
-engine = create_engine('sqlite:///./database.db', echo=True)
+# engine = create_engine('sqlite:///./database.db', echo=True)
+POSTGRESQL_ENV = os.environ['POSTGRESQL_ENV']
+engine = create_engine(f'{POSTGRESQL_ENV}')
 SQLModel.metadata.create_all(engine)
 
 
