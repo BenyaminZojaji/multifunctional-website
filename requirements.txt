@@ -2,3 +2,4 @@ flask
 sqlmodel
 bcrypt
 ultralytics
+python-dotenv

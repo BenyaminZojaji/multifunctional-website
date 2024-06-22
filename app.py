@@ -1,6 +1,7 @@
 import os
 import time
-from flask import Flask, render_template, request, redirect, url_for, session
+import dotenv
+from flask import Flask, flash, render_template, request, redirect, url_for, session as flask_session
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from pydantic import BaseModel
 from enc import Encryption
@@ -8,6 +9,9 @@ import ai_process
 
 
 app = Flask(__name__)
+dotenv = dotenv.load_dotenv()
+APP_SECRET_KEY = os.getenv("APP_SECRET_KEY")
+app.secret_key = APP_SECRET_KEY
 app.config["UPLOAD_FOLDER"] = './uploads'
 app.config["ALLOWED_EXTENSION"] = {'png', 'jpg', 'jpeg'}
 
@@ -68,23 +72,24 @@ def login():
                 password = request.form["password"])
             
         except:
-            print('Type Error')
+            flash('Type Error', 'danger')
             return redirect(url_for('login'))
         
         with Session(engine) as db_session:
             statement = select(User).where(User.username == login_model.username)
-            result = db_session.exec(statement).first()
+            user = db_session.exec(statement).first()
         
-        if result:
+        if user:
             enc_obj = Encryption()
-            if enc_obj.check(login_model.password, result.password):
-                print('welcome, you are logged in')
+            if enc_obj.check(login_model.password, user.password):
+                flash('welcome, you are logged in', 'success')
+                flask_session["user_id"] = user.id
                 return redirect(url_for('upload'))
             else:
-                print('Password is incorrect')
+                flash('Password is incorrect', 'warning')
                 return redirect(url_for('login'))
         else:
-            print('Username is incorrect')
+            flash('Username is incorrect', 'warning')
             return redirect(url_for('login'))
 
 
@@ -108,8 +113,7 @@ def register():
                 join_time=int(time.time())
                 )
         except Exception as e:
-            print('Type Error')
-            print (e)
+            flash('Type Error', 'danger')
             return redirect(url_for('register'))
             
             
@@ -135,33 +139,41 @@ def register():
                         )
                     db_session.add(user)
                     db_session.commit()
-                    print('Your register done succesfully.')
+                    flash('Your register done successfully.', 'success')
                     return redirect(url_for('login'))
             else:
-                print('Passwords are not match.')
+                flash('Passwords are not match.', 'warning')
                 return redirect(url_for('register'))  
         else:
-            print('username already exist, Try another username.')
+            flash('username already exist, Try another username.', 'warning')
             return redirect(url_for('register'))
+
+@app.route("/logout")
+def logout():
+    flask_session.pop("user_id")
+    return redirect(url_for("index"))
 
 
 @app.route("/upload", methods=['GET', "POST"])
 def upload():
-    if request.method == "GET":
-        return render_template('upload.html')
-    
-    elif request.method == "POST":
-        image = request.files['image']
-        if image.filename == '':
-            return redirect(url_for('upload'))
-        else:
-            if image and allowed_file(image.filename):
-                save_path = os.path.join(app.config["UPLOAD_FOLDER"], image.filename)
-                image.save(save_path)
-                process = ai_process.Ai_analyze()
-                result = process.analyze(save_path)
-                
-            return render_template('result.html', result=result)
+    if flask_session.get('user_id'):
+        if request.method == "GET":
+            return render_template('upload.html')
+        
+        elif request.method == "POST":
+            image = request.files['image']
+            if image.filename == '':
+                return redirect(url_for('upload'))
+            else:
+                if image and allowed_file(image.filename):
+                    save_path = os.path.join(app.config["UPLOAD_FOLDER"], image.filename)
+                    image.save(save_path)
+                    process = ai_process.Ai_analyze()
+                    result = process.analyze(save_path)
+                    
+                return render_template('result.html', result=result)
+    else:
+        return redirect(url_for('index'))
             
 
 

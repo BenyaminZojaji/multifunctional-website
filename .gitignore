@@ -4,3 +4,4 @@ uploads/*.JPEG
 uploads/*.PNG
 *.db
 *.ipynb
+.env
