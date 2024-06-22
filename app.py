@@ -1,6 +1,6 @@
 import os
 import time
-import dotenv
+# import dotenv
 from flask import Flask, flash, render_template, request, redirect, url_for, session as flask_session
 from sqlmodel import Field, SQLModel, create_engine, Session, select
 from pydantic import BaseModel
@@ -9,8 +9,9 @@ import ai_process
 
 
 app = Flask(__name__)
-dotenv = dotenv.load_dotenv()
-APP_SECRET_KEY = os.getenv("APP_SECRET_KEY")
+# dotenv = dotenv.load_dotenv()
+# APP_SECRET_KEY = os.getenv("APP_SECRET_KEY")
+APP_SECRET_KEY = os.environ['APP_SECRET_KEY']
 app.secret_key = APP_SECRET_KEY
 app.config["UPLOAD_FOLDER"] = './uploads'
 app.config["ALLOWED_EXTENSION"] = {'png', 'jpg', 'jpeg'}
